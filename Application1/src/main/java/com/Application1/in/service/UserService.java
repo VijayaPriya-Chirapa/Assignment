@@ -9,7 +9,7 @@ import com.Application1.in.Entity.User;
 public interface UserService 
 {
 	public List<UserDTO> getAllUsers();
-	public UserDTO addUser(User user);  // Update to accept and return DTO
-	public Optional<UserDTO> getUserById(Long id);
+	public UserDTO addUser(User user); 
+
 }
 

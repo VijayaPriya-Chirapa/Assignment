@@ -22,13 +22,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter'
 	runtimeOnly 'com.h2database:h2:2.2.220'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	//tests
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	//mapper
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 }
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+
  
 tasks.named('test') {
 	useJUnitPlatform()

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Application1.in.DTO.UserDTO;
 import com.Application1.in.Entity.User;
+import com.Application1.in.Exceptions.UserValidationExceptions;
 import com.Application1.in.mapper.UserMapper;
 import com.Application1.in.service.UserService;
 
@@ -30,45 +31,33 @@ public class UserController {
     private UserService userService;
 
 	@Autowired
-	private UserMapper userMap;
+	private UserMapper userMapper;
 	
 	  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	  
 	   @GetMapping("/all")
-	    public ResponseEntity<List<UserDTO>> getAllUsers() {
-	        // Get the list of all users from the service as DTOs
-	        List<UserDTO> userDTOs = userService.getAllUsers(); 
-
-	        return new ResponseEntity<>(userDTOs, HttpStatus.OK); // Return 200 OK with the list of UserDTOs
+	    public ResponseEntity<List<UserDTO>> getAllUsers() 
+	   {
+	     List<UserDTO> userDTOs = userService.getAllUsers(); 
+	     return new ResponseEntity<>(userDTOs, HttpStatus.OK); // Return 200 OK with the list of UserDTOs
 	    }
 
 	 
 	   @PostMapping("/add")
 	    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody User userDTO) {
 	        logger.info("Received request to add new user: {}", userDTO.getName());
-
+	        if(userDTO.getName()==null||userDTO.getName().length()<2||userDTO.getName().length()>50)
+	        {
+	        	logger.error("Validation failed:Name should be not null and within 2 and 50 characters");
+	         throw new UserValidationExceptions("Name should be not null and within 2 and 50 characters");
+	         }
+	       
 	        UserDTO savedUser = userService.addUser(userDTO);
-
 	        logger.info("User added with ID: {}", savedUser.getId());
+	        
 	        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 	    }
     
     
-	   @GetMapping("/id/{id}")
-	    public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
-	        logger.info("Received request to fetch user by ID: {}", id);
-
-	        // Fetch the user by ID from the service (it returns Optional<UserDTO>)
-	        Optional<UserDTO> userDTOOptional = userService.getUserById(id);
-
-	        if (userDTOOptional.isPresent()) {
-	            // User found, return it with HTTP status 200 OK
-	            return new ResponseEntity<>(userDTOOptional.get(), HttpStatus.OK);
-	        } else {
-	            // User not found, return HTTP status 404 NOT FOUND
-	            logger.warn("User not found with ID: {}", id);
-	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	        }
-	    }
 }
 
