@@ -1,5 +1,6 @@
 package com.Application1.in.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,48 +17,90 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Application1.in.DTO.UserDTO;
-import com.Application1.in.Entity.User;
+import com.Application1.in.Entity.UserVO;
+import com.Application1.in.Exceptions.UserNotFoundException;
 import com.Application1.in.Exceptions.UserValidationExceptions;
-import com.Application1.in.mapper.UserMapper;
+
 import com.Application1.in.service.UserService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users") // This makes the base URL "/users"
 public class UserController {
 
-	@Autowired
+    @Autowired
     private UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	@Autowired
-	private UserMapper userMapper;
-	
-	  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-	  
-	   @GetMapping("/all")
-	    public ResponseEntity<List<UserDTO>> getAllUsers() 
-	   {
-	     List<UserDTO> userDTOs = userService.getAllUsers(); 
-	     return new ResponseEntity<>(userDTOs, HttpStatus.OK); // Return 200 OK with the list of UserDTOs
-	    }
+    
+    @PostMapping("/add")
+    public ResponseEntity<UserVO> addUser(@Valid @RequestBody UserDTO userdto) {
+        logger.info("Received request to add a new user with name: {}", userdto.getName());
+        UserVO savedUserdto = userService.addUser(userdto);
+        return new ResponseEntity<>(savedUserdto, HttpStatus.CREATED);
+    }
 
-	 
-	   @PostMapping("/add")
-	    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody User userDTO) {
-	        logger.info("Received request to add new user: {}", userDTO.getName());
-	        if(userDTO.getName()==null||userDTO.getName().length()<2||userDTO.getName().length()>50)
+    
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUsers()
+    {
+    	logger.info("Received request to get all users.");//log
+        List<UserVO> userDTOs = userService.getAllUsers();
+        if(userDTOs == null) {userDTOs = new ArrayList<>();}
+        if (userDTOs.isEmpty()) 
+        {
+            return new ResponseEntity<>("No users found", HttpStatus.NOT_FOUND);
+        }
+        logger.info("Retrieved {} users.", userDTOs.size());//log
+        return new ResponseEntity<>(userDTOs, HttpStatus.OK);
+    }
+    
+    
+    
+	 @GetMapping("/id/{id}")
+	  public ResponseEntity<UserVO> getUserById(@PathVariable("id") Long id) 
+	 {
+	        logger.info("Received request to fetch user by ID: {}", id);
+	        Optional<UserVO> userDTOOptional = userService.getUserById(id);
+	        if (userDTOOptional.isPresent()) 
 	        {
-	        	logger.error("Validation failed:Name should be not null and within 2 and 50 characters");
-	         throw new UserValidationExceptions("Name should be not null and within 2 and 50 characters");
-	         }
-	       
-	        UserDTO savedUser = userService.addUser(userDTO);
-	        logger.info("User added with ID: {}", savedUser.getId());
-	        
-	        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-	    }
-    
-    
+	            return new ResponseEntity<>(userDTOOptional.get(), HttpStatus.OK);
+	        } else {
+	            logger.warn("User not found with ID: {}", id);
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	 }
+	 
+	 
+	 
+	 @GetMapping("/health")
+     public ResponseEntity<String> healthCheckForGetUserById() {
+	 try {
+         // Hardcoded input value
+         String input = "1"; // Change this to test other cases, e.g., "abc"
+         Long userId;  // Validate if the input is a valid Long
+         try {
+             userId = Long.parseLong(input);
+         } catch (NumberFormatException e) {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                     .body("Health check failed: Input is not a valid numeric ID");
+         }
+        
+         Optional<UserVO> user = userService.getUserById(userId); // Fetch employee by ID
+         if (user != null) {
+             return ResponseEntity.ok("Success health check");
+         } else {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                     .body("Failed health check: User not found");
+         }
+     } catch (UserNotFoundException e) {
+         return ResponseEntity.ok("Success health check");
+     } catch (Exception e) {
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                 .body("Health check failed: An unexpected error occurred");
+     }
+	 
+	 }
 }
 

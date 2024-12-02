@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="user_table")
-public class User {
+public class UserVO {
 
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY) // This will auto-generate the ID
@@ -30,9 +30,9 @@ public class User {
 	    private String password;
 	    
 
-    public User() {}
+    public UserVO() {}
 
-    public User(String name, String email, String password) {
+    public UserVO(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;

@@ -1,18 +1,13 @@
 package com.Application1.demo;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
-
 
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
 class Application1ApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+    	//assertDoesNotThrow(() -> new Object()); // Test to check if the context loads successfully
+    }
 }

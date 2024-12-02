@@ -1,35 +1,52 @@
 package com.Application1.in.BO;
 
-import java.util.List;
-import java.util.Optional;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Application1.in.DTO.UserDTO;
-import com.Application1.in.Entity.User;
+import com.Application1.in.Entity.UserVO;
 import com.Application1.in.Repository.UserRepository;
 import com.Application1.in.mapper.UserMapper;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class UserBOImp implements UserBO {
+public class UserBOImp implements UserBO
+{
+    private static final Logger logger = LoggerFactory.getLogger(UserBOImp.class); // Correct logger
 
-    @Autowired
-    private UserRepository userRepository; 
 
-    @Autowired
-    private UserMapper userMapper; 
-
+	@Autowired
+    private UserRepository userRepository;
 
     @Override
-    public UserDTO addUser(User user) {
-        User savedUser = userRepository.save(user);
-        return userMapper.userToUserDTO(savedUser);
+    public UserVO addUser(UserVO uservo) {
+        try {
+            
+            UserVO savedUser = userRepository.save(uservo);
+            logger.info("User with name '{}' successfully added with ID '{}'", savedUser.getName(), savedUser.getId());
+            return savedUser;  // Returning UserDTO after saving
+
+        } catch (Exception e) {
+            logger.error("Error adding user with name '{}'", uservo.getName(), e);
+            throw e;
+        }
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return userMapper.usersToUserDTOs(users);
-    }
+	public List<UserVO> getAllUsers() {
+		List<UserVO> users = userRepository.findAll();
+	    return users;
+	}
+
+	@Override
+	public Optional<UserVO> getUserById(Long id) {
+		
+		return userRepository.findById(id);
+	}
+
+
 }

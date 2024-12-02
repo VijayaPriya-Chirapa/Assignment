@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.Application1.in.DTO.UserDTO;
-import com.Application1.in.Entity.User;
+import com.Application1.in.Entity.UserVO;
 
 public interface UserBO
 {
 	
-	 public  UserDTO addUser(User user);
-	 public List<UserDTO> getAllUsers();
+	public UserVO addUser(UserVO uservo);
+	 public List<UserVO> getAllUsers();
+	 public Optional<UserVO> getUserById(Long id);
 
 }
