@@ -1,10 +1,22 @@
 package com.Application1.in.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserDTO {
 
     private Long id;
+    
+    @NotBlank(message = "Name is mandatory")
+    @Size(min = 2, max = 50)
     private String name;
+    
+    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Email should be valid")
     private String email;
+    
+    @NotBlank(message = "Password is mandatory")
     private String password;
 
     public UserDTO() {}

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.Application1.in.DTO.UserDTO;
-import com.Application1.in.Entity.UserVO;
+import com.Application1.in.EntityVO.UserVO;
 
 public interface UserBO
 {

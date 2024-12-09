@@ -1,4 +1,4 @@
-package com.Application1.in.Entity;
+package com.Application1.in.EntityVO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +32,8 @@ public class UserVO {
 
     public UserVO() {}
 
-    public UserVO(String name, String email, String password) {
+    public UserVO(long id,String name, String email, String password) {
+    	this.id=id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -69,5 +70,6 @@ public class UserVO {
     public void setPassword(String password) {
         this.password = password;
     }
+
     
 }

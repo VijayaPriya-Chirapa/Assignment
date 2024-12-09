@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import com.Application1.in.DTO.UserDTO;
-import com.Application1.in.Entity.UserVO;
+import com.Application1.in.EntityVO.UserVO;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

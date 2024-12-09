@@ -1,7 +1,8 @@
 package com.Application1.in.mapper;
 
 import com.Application1.in.DTO.UserDTO;
-import com.Application1.in.Entity.UserVO;
+import com.Application1.in.EntityVO.UserVO;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;

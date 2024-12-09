@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Application1
+  cloud:
+    config:
+      uri: http://localhost:8888  # Replace with your config server's URL

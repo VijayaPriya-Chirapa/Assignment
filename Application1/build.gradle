@@ -1,70 +1,77 @@
 plugins {
-
-	id 'java'
-
-	id 'war'
-
-	id 'org.springframework.boot' version '3.4.0'
-
-	id 'io.spring.dependency-management' version '1.1.6'
-
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
- 
+
 group = 'com.demo'
-
 version = '0.0.1-SNAPSHOT'
- 
+
 java {
-
-	toolchain {
-
-		languageVersion = JavaLanguageVersion.of(17)
-
-	}
-
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
- 
+
+sourceSets {
+    test {
+        resources {
+            srcDir 'src/test/resources'
+        }
+    }
+}
+
+
 repositories {
-
-	mavenCentral()
-
+    mavenCentral()
+    gradlePluginPortal()
 }
- 
+
 dependencies {
-
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	runtimeOnly 'com.h2database:h2:2.2.220'
-
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-
-	   implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    // Spring dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    
+    // Mockito for mocking
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.7.0'
+    
+    testImplementation 'com.github.tomakehurst:wiremock:3.10.0'
+  
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    
+    // Cucumber dependencies
+    //testimplementation 'io.cucumber:cucumber-java:7.13.0'
+    //testimplementation 'io.cucumber:cucumber-spring:7.13.0'
+    //testimplementation 'io.cucumber:cucumber-junit:7.13.0'
+    //testimplementation 'io.cucumber:cucumber-junit-platform-engine:7.13.0'
+    testImplementation 'io.cucumber:cucumber-java:7.13.0'  // Cucumber step definitions
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.13.0' // JUnit 5 integration for Cucumber
+    testImplementation 'io.cucumber:cucumber-spring:7.13.0'  // Optional: Cucumber + Spring integration (if needed)
+    
+    // JUnit 5 dependencies (needed for Cucumber with JUnit 5)
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+        
+    
+    
 }
+
 
 tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
 }
 
- 
 tasks.named('test') {
-
-	useJUnitPlatform()
-
+    useJUnitPlatform()  // Ensures JUnit 5 is used for tests
 }
- 
- 
- 
