@@ -100,9 +100,6 @@ public class BOTests
 	        assertFalse(result.isPresent());
 	        verify(userrepo).findById(1L);  // Ensure findById() was called
 	    }
-	 
-	
-	
-	
+
 
 }

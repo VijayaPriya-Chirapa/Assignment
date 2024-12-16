@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Application1.in.DTO.UserDTO;
 import com.Application1.in.EntityVO.UserVO;
-import com.Application1.in.Exceptions.UserNotFoundException;
-import com.Application1.in.Exceptions.UserValidationExceptions;
+
 
 import com.Application1.in.service.UserService;
 import com.Application1.in.util.Constants;
@@ -38,12 +37,17 @@ public class UserController {
     
     @PostMapping("/add")
     public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userdto) {
-    	
-        logger.info("Received request to add a new user with name: {}", userdto.getName());
-        UserVO savedUserdto = userService.addUser(userdto);
-       	return new ResponseEntity<>(savedUserdto, HttpStatus.CREATED);
-    
-    }
+    	logger.info("Received request to add a new user with name: {}", userdto.getName());
+
+        try {
+            UserVO savedUserdto = userService.addUser(userdto);
+            logger.info("User created successfully with ID: {}", savedUserdto.getId());
+            return new ResponseEntity<>(savedUserdto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("Error creating user", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create user");
+        }
+        }
     
     @GetMapping("/all")
     public ResponseEntity<?> getAllUsers()
@@ -76,12 +80,9 @@ public class UserController {
 
 	 
 	 
-	 
 	 @GetMapping("/health/{value}")
 	 public ResponseEntity<String> healthCheckForGetUserById(@PathVariable("value") String value) {
 	     try {
-	    	 //String s="abc";
-	         // Validate if the input is a valid Long
 	         Long userId;
 	         try {
 	             userId = Long.parseLong(value);
