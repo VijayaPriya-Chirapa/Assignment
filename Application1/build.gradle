@@ -1,111 +1,137 @@
+
 plugins {
-    id 'java'
-    id 'war'
-    id 'org.springframework.boot' version '3.4.0'
-    id 'io.spring.dependency-management' version '1.1.6'
-    id 'io.gatling.gradle' version '3.13.1'
-}
+	id 'java'
+	id 'scala'
+	id 'org.springframework.boot' version '3.4.0'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'io.gatling.gradle' version '3.13.1'
 
-group = 'com.demo'
+}
+ 
+group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-
+ 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
-
-sourceSets {
-    enterprise {
-    }
+ 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
 }
-
-
+ 
 repositories {
-    mavenCentral()
-    gradlePluginPortal()
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
 }
-
+ 
+ext {
+	set('springCloudVersion', "2024.0.0-RC1")
+}
+ 
 dependencies {
 
 
-    // Spring dependencies
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    
-    
-    //lambok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    
-    
-    //h2 database
-    runtimeOnly 'com.h2database:h2'
-    
-    
-    //test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    
-    
-    //junit
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-   // testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-   
-   
-    //mapstruct
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-    
-    
-    //rest
-    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-    
-    // Mockito for mocking
-    testImplementation 'org.mockito:mockito-core:5.5.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.7.0'
-    
-    //testImplementation 'com.github.tomakehurst:wiremock:3.10.0'
-  
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-   //cucumber
-    testImplementation 'io.cucumber:cucumber-java:7.13.0'  // Cucumber step definitions
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.13.0' // JUnit 5 integration for Cucumber
-    testImplementation 'io.cucumber:cucumber-spring:7.13.0'  // Optional: Cucumber + Spring integration (if needed)
-    
-    
-    // JUnit 5 dependencies (needed for Cucumber with JUnit 5)
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-     
-     implementation 'org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.7'
+    
+    //wiremock
+    //testImplementation 'com.github.tomakehurst:wiremock:3.10.0'
+    //testImplementation "org.wiremock:wiremock-standalone:3.10.0"
+    
+    // Mockito Core for mocking objects
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+ 
+    // Mockito with JUnit 5 support
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    
+    //cucumber
+    testImplementation 'io.cucumber:cucumber-java:7.10.0' // Latest version
+    testImplementation 'io.cucumber:cucumber-junit:7.10.0' // For JUnit test execution
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.10.0'
+    testImplementation 'io.cucumber:cucumber-spring:7.14.0'
+    
+    // Jackson dependencies
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+ 
+    // If you're using JSON processing, you might also want to include jackson-core and jackson-annotations
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    
+    //JAXB
+    // MOXy - JAXB implementation for JSON
+    implementation 'org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.7'
  
     // JAXB API - Required for JAXB annotations and classes
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
  
- 
     // EclipseLink JPA (javax.persistence)
-    implementation 'org.eclipse.persistence:javax.persistence:2.2.0'   
-    //gatling
-    implementation 'io.gatling:gatling-core:3.13.1'   // Core Gatling library
+    implementation 'org.eclipse.persistence:javax.persistence:2.2.0'
+ 
+
+    
+    // Gatling dependencies
+	implementation 'io.gatling:gatling-core:3.13.1'   // Core Gatling library
 	implementation 'io.gatling:gatling-http:3.13.1'   // HTTP module for Gatling
 	implementation 'io.gatling.highcharts:gatling-charts-highcharts:3.13.1'  // Highcharts for Gatling results
+	implementation 'org.scala-lang:scala-library:2.12.10'  // Scala library dependency (Compatible with Gatling 3.9.5)
+	testImplementation 'org.scala-js:scalajs-test-bridge_2.12:1.9.0'   // Scala.js test bridge compatible with 2.12.x
 	implementation 'com.typesafe:config:1.3.1'   // Configuration library
-	
-	
-	//spring batch
-	 implementation 'org.springframework.boot:spring-boot-starter-batch'
-	 testImplementation 'org.springframework.batch:spring-batch-test'
-	 implementation 'org.springframework.batch:spring-batch-core'
-	// developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	 implementation "org.apache.commons:commons-csv:1.5"	
+
+    
+    
+    // Spring Batch dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.batch:spring-batch-core'
+    implementation 'org.springframework.batch:spring-batch-infrastructure'
+ 
+    // For writing to CSV
+    implementation 'com.opencsv:opencsv:5.6'
+    
+    //Thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
+    //OpenAI
+  	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    //  implementation 'org.springdoc:springdoc-openapi-ui:2.3.0'
+    
+    
+    //implementation 'org.springframework.boot:spring-boot-starter-web'
+  	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+  	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+  	//providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     
 }
+ 
 
 
 tasks.withType(JavaCompile) {
     options.annotationProcessorPath = configurations.annotationProcessor
 }
 
-tasks.named('test') {
-    useJUnitPlatform()  // Ensures JUnit 5 is used for tests
+ 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
+ 
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+

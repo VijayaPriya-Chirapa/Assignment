@@ -12,5 +12,8 @@ public interface UserBO
 	public UserVO addUser(UserVO uservo);
 	 public List<UserVO> getAllUsers();
 	 public Optional<UserVO> getUserById(Long id);
+	 
+	 public String loginUser(String email, String password);
+
 
 }

@@ -9,10 +9,6 @@ import com.Application1.in.EntityVO.UserVO;
 public interface UserMapper {
     
     UserVO userDTOToUser(UserDTO userDTO);
-    
-    
     UserDTO userToUserDTO(UserVO user);
-    
-    //@Mapping(target = "password", ignore = true)
     List<UserDTO> usersToUserDTOs(List<UserVO> users);
 }

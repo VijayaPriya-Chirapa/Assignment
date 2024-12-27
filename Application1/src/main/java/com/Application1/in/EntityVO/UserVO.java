@@ -71,5 +71,8 @@ public class UserVO {
         this.password = password;
     }
 
-    
+    @Override
+    public String toString() {
+        return "UserVO [id=" + id + ", name=" + name + ", email=" + email + "]";
+    }
 }

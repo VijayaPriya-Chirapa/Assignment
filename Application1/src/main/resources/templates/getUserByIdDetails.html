@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Get User by ID</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        
+        
+        <!-- Display user details if available -->
+        <div th:if="${user != null}">
+            <h3>User Details</h3>
+            <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <p><strong>Password:</strong> <span th:text="${user.password}"></span></p>
+        </div>
+
+        <!-- Error message if user not found -->
+        <div th:if="${error}" class="error-message">
+        <p>Error: <span th:text="${error}"></span></p>
+    </div>
+
+
+        <a href="/api/Users/dashboard" class="btn btn-primary">Back to Home</a>
+    </div>
+</body>
+</html>

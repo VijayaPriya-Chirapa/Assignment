@@ -23,6 +23,7 @@ public class UserBOImp implements UserBO
 
 	@Autowired
     private UserRepository userRepository;
+	
 
     @Override
     public UserVO addUser(UserVO uservo) 
@@ -50,6 +51,27 @@ public class UserBOImp implements UserBO
 	public Optional<UserVO> getUserById(Long id) 
 	{
 		return userRepository.findById(id);
+	}
+
+	@Override
+	public String loginUser(String email, String password) {
+	    // Find user by email
+	    Optional<UserVO> userOptional = userRepository.findByEmail(email);
+
+	    // Check if user exists
+	    if (!userOptional.isPresent()) {
+	        return "Email not found"; // Return this message if email is not found
+	    }
+
+	    UserVO user = userOptional.get();
+
+	    // Compare the provided password with the stored password (plain text comparison)
+	    if (!user.getPassword().equals(password)) {
+	        return "Invalid password!"; // Return this message if the password is incorrect
+	    }
+
+	    // If credentials match, return a success message
+	    return "Login successful! User details: " + user.toString(); 
 	}
 
 
